@@ -23,38 +23,46 @@ function chooseColor(magnitude) {
   case magnitude > 5:
     return "red";
   case magnitude > 4:
-    return "orange";
+    return "coral";
   case magnitude > 3:
-    return "yellow";
+    return "orange";
   case magnitude > 2:
-    return "green";
-  case magnitude > 5:
-    return "blue";
+    return "gold";
+  case magnitude > 1:
+    return "yellow";
   default:
-    return "purple";
+    return "green";
   }
 }
 
 // Define function of circle radius based on magnitude
 function radiusSize(magnitude) {
-  return magnitude * 2000;
+  return magnitude * 4;
 }
 
+function styleInfo(feature) {
+  return {
+    opacity: 1,
+    fillOpacity: 1,
+    fillColor: chooseColor(feature.properties.mag),
+    color: "#000000",
+    radius: radiusSize(feature.properties.mag),
+    stroke: true,
+    weight: 0.5
+  };
+}
 // Grabbing our GeoJSON data..
 d3.json(link).then(function(data) {
   L.geoJson(data, {
-    pointtolayer: function(feature, latlng) {
-      return L.circleMarker(latlng, {
-        radius: radiusSize(feature.properties.magnitude),
-        color: chooseColor(feature.properties.magnitude),
-        fillOpacity: 0.5,
-      });
+    pointToLayer: function(feature, latlng) {
+      return L.circleMarker(latlng) 
   },
+
+  style: styleInfo, 
+  
   // Called on each feature
   onEachFeature: function(feature, layer) {
-    // Set mouse events to change map styling
-    layer.on({
-    });
+
   // Create a GeoJSON layer with the retrieved data
     layer.bindPopup("<h1> Location: " + feature.properties.place + "</h1> <hr> <h2> Magnitude: " + feature.properties.mag + "</h2>");
   
